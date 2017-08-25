@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using dm.Models;
 using dm.Framework;
+using dm.Data;
 
 namespace dm.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     public class ProductController : Controller
     {
         [HttpGet]
@@ -20,19 +21,18 @@ namespace dm.Controllers
         [HttpGet("{id}")]
         public string Get(int id)
         {
-            return new Product()
-            {
-                Id = id,
-                Name = "test",
-                Root = "/",
-                Shash = Shash.Create("dafsdfs"),
-                AsOf = DateTime.Now
-            }.ToSmallJson();
+            using (var db = new SqlDatabase("server=ARIN;integrated security=sspi;database=dm$meta;"))
+                return Product.GetProduct(id, db)?.ToSmallJson() ?? "no matches";
         }
 
         [HttpPost]
-        public void Post([FromBody]string value)
+        public int Post([FromBody]string value)
         {
+            Console.WriteLine($"value received: '{value}'");
+
+            var prod = new Product().FromSmallJson(value);
+            using (var db = new SqlDatabase("server=ARIN;integrated security=sspi;database=dm$meta;"))
+                return Product.AddProduct(prod, db);
         }
 
         [HttpPut("{id}")]
