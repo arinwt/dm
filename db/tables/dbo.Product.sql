@@ -1,0 +1,10 @@
+CREATE TABLE dbo.Product (
+	"Id"			INT				NOT NULL	IDENTITY,
+	"Name"			NVARCHAR(450)	NOT NULL,
+	"Root"			NVARCHAR(MAX)	NOT NULL,
+	"BlobId"		BIGINT			NOT NULL,
+	CONSTRAINT PK_Product PRIMARY KEY ("Id"),
+	CONSTRAINT FK_Product_Blob FOREIGN KEY ("BlobId")
+		REFERENCES dbo.Blob ("Id"),
+	INDEX IX_Product_Name NONCLUSTERED ("Name"),
+);

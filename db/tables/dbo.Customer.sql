@@ -1,0 +1,10 @@
+CREATE TABLE dbo.Customer (
+	"Id"			INT				NOT NULL	IDENTITY,
+	"Name"			NVARCHAR(450)	NOT NULL,
+	"Root"			NVARCHAR(MAX)	NOT NULL,
+	"BlobId"		BIGINT			NOT NULL,
+	CONSTRAINT PK_Customer PRIMARY KEY ("Id"),
+	CONSTRAINT FK_Customer_Blob FOREIGN KEY ("BlobId")
+		REFERENCES dbo.Blob ("Id"),
+	INDEX IX_Customer_Name NONCLUSTERED ("Name")
+);

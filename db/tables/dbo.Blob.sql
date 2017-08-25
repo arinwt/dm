@@ -1,0 +1,12 @@
+CREATE TABLE dbo.Blob (
+	"Id"			BIGINT			NOT NULL	IDENTITY,
+	"Shash"			BINARY(32)		NOT NULL,
+	"AsOf"			DATETIME2		NOT NULL
+		CONSTRAINT DF_Blob_AsOf DEFAULT (SYSDATETIME()),
+	"PreviousId"	BIGINT				NULL,
+	"Data"			VARBINARY(MAX)		NULL,
+	CONSTRAINT PK_Blob PRIMARY KEY ("Id"),
+	CONSTRAINT FK_Blob_Blob FOREIGN KEY ("PreviousId")
+		REFERENCES dbo.Blob ("Id"),
+	CONSTRAINT UQ_Blob_PreviousId UNIQUE ("PreviousId")
+);
